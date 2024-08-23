@@ -1,0 +1,37 @@
+{
+  "name": "express-mongoose-api",
+  "version": "1.0.0",
+  "description": "A description of my npm package",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextmasterygit/lightweight-localstorage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nextmasterygit/lightweight-localstorage/issues"
+  },
+  "homepage": "https://github.com/nextmasterygit/lightweight-localstorage#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "formidable": "^3.5.1",
+    "mongoose": "^8.5.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.4"
+  }
+}
