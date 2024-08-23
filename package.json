@@ -1,6 +1,6 @@
 {
-  "name": "express-mongoose-api",
-  "version": "1.0.0",
+  "name": "node-mongoose-api",
+  "version": "1.0.2",
   "description": "A description of my npm package",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,12 +17,12 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nextmasterygit/lightweight-localstorage.git"
+    "url": "https://github.com/nextmasterygit/node-mongoose-api.git"
   },
   "bugs": {
-    "url": "https://github.com/nextmasterygit/lightweight-localstorage/issues"
+    "url": "https://github.com/nextmasterygit/node-mongoose-api/issues"
   },
-  "homepage": "https://github.com/nextmasterygit/lightweight-localstorage#readme",
+  "homepage": "https://github.com/nextmasterygit/node-mongoose-api#readme",
   "dependencies": {
     "express": "^4.19.2",
     "formidable": "^3.5.1",
