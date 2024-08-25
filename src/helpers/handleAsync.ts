@@ -1,31 +1,14 @@
-const formidable = require("formidable");
-const { handleError } = require("./errorHandler");
-const { result } = require("./responseHandler");
-const mongoose = require("mongoose");
-import { SessionOption } from "mongoose";
+import formidable from "formidable";
+import { handleError } from "./errorHandler";
+import { Result } from "./responseHandler";
+import mongoose, { SessionOption } from "mongoose";
 import { Request, Response, NextFunction } from "express";
-
-type fnType = (
-  req: Request,
-  res: Response,
-  next?: NextFunction,
-  session?: SessionOption
-) => void;
-
-type fnFormidableType = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  session: SessionOption,
-  err: any,
-  fields: [],
-  files: []
-) => void;
+import { FnType, FnSessionType, FnFormidableType } from "../interface/types";
 
 export const handleAsync = (
-  fn: fnType,
+  fn: FnType,
   modelName?: string,
-  customError?: object,
+  customError?: string,
   status = 400
 ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -34,7 +17,7 @@ export const handleAsync = (
     } catch (error) {
       console.log(`error on =====${modelName}===`, error);
       if (customError) {
-        return result(res, status, customError);
+        return Result(res, status, customError);
       }
       handleError(res, error);
       next(error);
@@ -43,9 +26,9 @@ export const handleAsync = (
 };
 
 export const handleAsyncSession = (
-  fn: fnType,
+  fn: FnSessionType,
   modelName: string,
-  customError: object,
+  customError?: string,
   status = 400
 ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -60,7 +43,7 @@ export const handleAsyncSession = (
       console.log(`Error in ${modelName}:`, error);
       if (!res.headersSent) {
         if (customError) {
-          result(res, status, customError);
+          Result(res, status, customError);
         } else {
           handleError(res, error);
         }
@@ -73,14 +56,14 @@ export const handleAsyncSession = (
 };
 
 export const handleFormAsyncSession = (
-  fn: fnFormidableType,
+  fn: FnFormidableType,
   modelName: string,
-  customError: string,
+  customError?: string,
   status = 400
 ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     let form = new formidable.IncomingForm();
-    form.parse(req, async (err: any, fields: [], files: []) => {
+    form.parse(req, async (err: any, fields: any, files: any) => {
       const session = await mongoose.startSession();
       session.startTransaction();
 
@@ -91,7 +74,7 @@ export const handleFormAsyncSession = (
         await session.abortTransaction();
         console.log(`Error in ${modelName}:`, error);
         if (customError) {
-          result(res, status, customError);
+          Result(res, status, customError);
         } else {
           handleError(res, error);
           next(error);

@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { Result } from "./responseHandler";
 
-const handleError = (res: Response, error: any) => {
+export const handleError = (res: Response, error: any) => {
   if (error?.code === 11000) {
     return Result(res, 400, ErrorHandler2(error));
   } else {
@@ -9,13 +9,13 @@ const handleError = (res: Response, error: any) => {
   }
 };
 
-const ErrorHandler = (err: any) => {
+export const ErrorHandler = (err: any) => {
   return err.message
     ? err.message.substring(err.message.lastIndexOf(":") + 1)
     : "An Unexpected Error on server site";
 };
 
-const uniqueMessage = (error: any) => {
+export const uniqueMessage = (error: any) => {
   console.log("uniqueMessage", error);
   let output;
   try {
@@ -33,7 +33,7 @@ const uniqueMessage = (error: any) => {
 
   return output;
 };
-const ErrorHandler2 = (error: any) => {
+export const ErrorHandler2 = (error: any) => {
   let message = "";
 
   if (error.code) {
@@ -53,10 +53,4 @@ const ErrorHandler2 = (error: any) => {
   }
 
   return message.substring(message.lastIndexOf(":") + 2);
-};
-
-export = {
-  ErrorHandler,
-  ErrorHandler2,
-  handleError,
 };

@@ -1,15 +1,13 @@
 import { Request, Response } from "express";
-import { Model, Document } from "mongoose";
+import { ObjectId } from "mongoose";
 
 export interface FindByIdAndUpdateType {
-  model: Model<Document>;
-  id: string;
+  id: string | ObjectId;
   data: object;
   options?: Record<string, any>;
 }
 export interface UpdateManyType {
-  model: Model<Document>;
-  ids: string[];
+  ids: (string | ObjectId)[];
   data: object;
   options?: Record<string, any>;
 }
@@ -17,5 +15,4 @@ export interface UpdateManyType {
 export interface UpdateManyFastType {
   req: Request;
   res: Response;
-  model: Model<Document>;
 }
