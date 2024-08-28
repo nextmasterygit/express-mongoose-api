@@ -6,7 +6,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "declaration": true, // Add this line
+    "declarationMap": true // Optional: generates map files for declarations
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

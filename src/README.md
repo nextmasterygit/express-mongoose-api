@@ -2,5 +2,6 @@
 
 ```
 npm login
+tsc
 npm publish
 ```
