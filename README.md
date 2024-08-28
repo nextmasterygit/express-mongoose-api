@@ -9,6 +9,7 @@
 "date-fns-tz": "^3.1.3",
 "express": "^4.19.2",
 "formidable": "^3.5.1"
+npm install date-fns date-fns-tz formidable
 ```
 
 ## Key Features
@@ -19,6 +20,7 @@
 ## Tested
 
 `This package has been tested with various scenarios.`
+`[test-node-mongoose-api](https://github.com/nextmasterygit/test-node-mongoose-api) For practical examples clone this repo. This repository demonstrates the usage of node-mongoose-api for testing purposes.`
 
 ## How to Use
 
