@@ -1,6 +1,6 @@
 {
   "name": "node-mongoose-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A description of my npm package",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/nextmasterygit/node-mongoose-api#readme",
   "dependencies": {
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.1.3",
     "express": "^4.19.2",
     "formidable": "^3.5.1"
   },

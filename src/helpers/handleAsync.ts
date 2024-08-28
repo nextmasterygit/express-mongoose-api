@@ -1,9 +1,14 @@
-import formidable from "formidable";
+import { IncomingForm } from "formidable";
 import { handleError } from "./errorHandler";
-import { Result } from "./responseHandler";
-import mongoose, { SessionOption } from "mongoose";
+import { ResponseJson } from "./ResponseJson";
+import mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
-import { FnType, FnSessionType, FnFormidableType } from "../interface/types";
+import {
+  FnType,
+  FnSessionType,
+  FnFormidableType,
+  FnFormidableTypeSession,
+} from "../interface/types";
 
 export const handleAsync = (
   fn: FnType,
@@ -11,16 +16,18 @@ export const handleAsync = (
   customError?: string,
   status = 400
 ) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next?: NextFunction) => {
     try {
       await fn(req, res, next);
     } catch (error) {
       console.log(`error on =====${modelName}===`, error);
       if (customError) {
-        return Result(res, status, customError);
+        return ResponseJson(res, status, customError);
       }
       handleError(res, error);
-      next(error);
+      if (next) {
+        next(error);
+      }
     }
   };
 };
@@ -43,7 +50,7 @@ export const handleAsyncSession = (
       console.log(`Error in ${modelName}:`, error);
       if (!res.headersSent) {
         if (customError) {
-          Result(res, status, customError);
+          ResponseJson(res, status, customError);
         } else {
           handleError(res, error);
         }
@@ -55,33 +62,63 @@ export const handleAsyncSession = (
   };
 };
 
-export const handleFormAsyncSession = (
+export const handleFormAsync = (
   fn: FnFormidableType,
   modelName: string,
   customError?: string,
   status = 400
 ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    let form = new formidable.IncomingForm();
-    form.parse(req, async (err: any, fields: any, files: any) => {
-      const session = await mongoose.startSession();
-      session.startTransaction();
-
-      try {
-        await fn(req, res, next, session, err, fields, files);
-        await session.commitTransaction();
-      } catch (error) {
-        await session.abortTransaction();
-        console.log(`Error in ${modelName}:`, error);
-        if (customError) {
-          Result(res, status, customError);
-        } else {
-          handleError(res, error);
-          next(error);
+    let form = new IncomingForm();
+    form.parse(
+      req,
+      async (err: any, fields: Record<string, any>, files: any) => {
+        try {
+          await fn(req, res, next, err, fields, files);
+        } catch (error) {
+          console.log(`Error in ${modelName}:`, error);
+          if (customError) {
+            ResponseJson(res, status, customError);
+          } else {
+            handleError(res, error);
+            next(error);
+          }
         }
-      } finally {
-        session.endSession();
       }
-    });
+    );
+  };
+};
+
+export const handleFormAsyncSession = (
+  fn: FnFormidableTypeSession,
+  modelName: string,
+  customError?: string,
+  status = 400
+) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    let form = new IncomingForm();
+    form.parse(
+      req,
+      async (err: any, fields: Record<string, any>, files: any) => {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+
+        try {
+          await fn(req, res, next, session, err, fields, files);
+          await session.commitTransaction();
+        } catch (error) {
+          await session.abortTransaction();
+          console.log(`Error in ${modelName}:`, error);
+          if (customError) {
+            ResponseJson(res, status, customError);
+          } else {
+            handleError(res, error);
+            next(error);
+          }
+        } finally {
+          session.endSession();
+        }
+      }
+    );
   };
 };

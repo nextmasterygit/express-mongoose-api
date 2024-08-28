@@ -1,9 +1,9 @@
-import { Model } from "mongoose";
-import { removeUndefined } from "../helpers/reuseFunction";
+import { Model } from 'mongoose';
+import { Utility } from '../helpers/Utility';
 
-import { CreateApiType } from "../interface/create.types";
+import { CreateApiType } from '../interface/crud.operation';
 
-export class createControllerApi {
+export class CreateOperation {
   private model: Model<any>;
 
   constructor(model: Model<any>) {
@@ -11,9 +11,10 @@ export class createControllerApi {
   }
 
   async create({ data, options = {} }: CreateApiType) {
-    removeUndefined(data);
+    Utility.removeUndefined(data);
     const api = new this.model(data);
     const response = await api.save(options);
     return response;
   }
 }
+export type CreateOperationType = InstanceType<typeof CreateOperation>;
