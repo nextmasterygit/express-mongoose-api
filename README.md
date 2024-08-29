@@ -144,7 +144,7 @@ const result = await listAggregation({
 - filter
 
 ```
- const customParams: CustomParamsType = {
+ const customParams: CustomParamsType : {
     projectionFields: {
       _id: 1,
       title: 1,
