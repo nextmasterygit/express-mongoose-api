@@ -1,7 +1,7 @@
 {
   "name": "node-mongoose-api",
-  "version": "1.1.5",
-  "description": "A description of my npm package",
+  "version": "1.1.6",
+  "description": "Simplify CRUD operations and MongoDB aggregations with this utility. Easily filter and paginate data by configuring fields in props",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
