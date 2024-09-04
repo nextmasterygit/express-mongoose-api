@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import mongoose, { ClientSession, Model, ObjectId } from 'mongoose';
+import { Request, Response } from "express";
+import mongoose, { ClientSession, Model, ObjectId } from "mongoose";
 
 interface Options {
   session?: ClientSession; // Adjust according to your session type
@@ -68,7 +68,7 @@ export interface QueryType {
 export interface ListAggregationType {
   query?: QueryType;
   model: Model<any>;
-  ownPipeline?: () => any;
+  ownPipeline?: ({}: AggregationPipelineFunctionType) => any;
   customParams: CustomParamsTypeQuery;
   numbering?: boolean;
   ids?: string[] | ObjectId[];
