@@ -1,13 +1,10 @@
-import {
-  AggregationResult,
-  ListAggregationType,
-} from "../interface/crud.operation";
-import { createAggregationPipeline } from "./aggregation/aggregation";
+import { AggregationResult, ListAggregationType } from '../interface/crud.operation';
+import { createAggregationPipeline } from './aggregation/aggregation';
 function addRowNumbers(data: any[], pageNumber: number, pageSize: number) {
   return data.map((item, index) => {
     return {
       ...item,
-      rowNum: (pageNumber - 1) * pageSize + index + 1,
+      rowNum: (pageNumber - 1) * pageSize + index + 1
     };
   });
 }
@@ -20,27 +17,32 @@ export const listAggregation = async ({
   numbering,
   ids,
   cache,
-  options = {},
+  options = {}
 }: ListAggregationType): Promise<AggregationResult> => {
-  const { searchTerm, sortField, deleted, fromDate, toDate, fieldDate } =
-    query || {};
+  let aggregationPipeline = createAggregationPipeline;
 
-  if (fromDate) {
-    customParams.fromDate = fromDate;
+  if (ownPipeline) {
+    aggregationPipeline = ownPipeline;
   }
-  if (toDate) {
-    customParams.toDate = toDate;
-  }
-  if (fieldDate) {
-    customParams.fieldDate = fieldDate;
+  const { searchTerm, sortField, deleted, fromDate, toDate, fieldDate } = query || {};
+  if (customParams) {
+    if (fromDate) {
+      customParams.fromDate = fromDate;
+    }
+    if (toDate) {
+      customParams.toDate = toDate;
+    }
+    if (fieldDate) {
+      customParams.fieldDate = fieldDate;
+    }
   }
   let columnFilters: any[] = [];
   if (query?.columnFilters) {
-    if (typeof query?.columnFilters === "string") {
+    if (typeof query?.columnFilters === 'string') {
       try {
         columnFilters = JSON.parse(query.columnFilters);
       } catch (error) {
-        console.error("Failed to parse columnFilters:", error);
+        console.error('Failed to parse columnFilters:', error);
       }
     } else if (Array.isArray(query?.columnFilters)) {
       columnFilters = query.columnFilters;
@@ -52,31 +54,16 @@ export const listAggregation = async ({
   page === 0 ? (page = 1) : (page = page);
   let skip = (page - 1) * limit;
 
-  let aggregationPipeline = createAggregationPipeline;
-
-  if (ownPipeline) {
-    aggregationPipeline = ownPipeline({
-      skip,
-      limit,
-      searchTerm,
-      sortField: sortField ? sortField : "createdAt",
-      sortOrder: sortOrder ? sortOrder : -1,
-      columnFilters,
-      ids,
-      deleted,
-      customParams,
-    });
-  }
   const pipeline = aggregationPipeline({
     skip,
     limit,
     searchTerm,
-    sortField: sortField ? sortField : "createdAt",
+    sortField: sortField ? sortField : 'createdAt',
     sortOrder: sortOrder ? sortOrder : -1,
     columnFilters,
     ids,
     deleted,
-    customParams,
+    customParams
   });
   let result: AggregationResult[] = [];
 
@@ -90,13 +77,11 @@ export const listAggregation = async ({
   const total = result.length > 0 ? result[0].total : 0;
   const extra = result.length > 0 ? result[0]?.extra : 0;
   const data = result.length > 0 ? result[0].data : [];
-  const dataWithRowNumbers = numbering
-    ? addRowNumbers(data, page, limit)
-    : data;
+  const dataWithRowNumbers = numbering ? addRowNumbers(data, page, limit) : data;
 
   return {
     total: total,
     extra: extra,
-    data: dataWithRowNumbers,
+    data: dataWithRowNumbers
   };
 };

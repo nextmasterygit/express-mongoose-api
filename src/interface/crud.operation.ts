@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import mongoose, { ClientSession, Model, ObjectId } from "mongoose";
+import { Request, Response } from 'express';
+import mongoose, { ClientSession, Model, ObjectId } from 'mongoose';
 
 interface Options {
   session?: ClientSession; // Adjust according to your session type
@@ -65,16 +65,31 @@ export interface QueryType {
   page?: number | string;
 }
 
-export interface ListAggregationType {
+// Base types
+interface BaseListAggregationType {
   query?: QueryType;
   model: Model<any>;
   ownPipeline?: ({}: AggregationPipelineFunctionType) => any;
-  customParams: CustomParamsTypeQuery;
   numbering?: boolean;
   ids?: string[] | ObjectId[];
   cache?: string;
   options?: Options;
 }
+// Interface when `ownPipeline` is present, making `customParams` optional
+interface WithOwnPipeline extends BaseListAggregationType {
+  ownPipeline: ({}: AggregationPipelineFunctionType) => any;
+  customParams?: CustomParamsTypeQuery; // Optional
+}
+
+// Interface when `ownPipeline` is absent, making `customParams` required
+interface WithoutOwnPipeline extends BaseListAggregationType {
+  ownPipeline?: never; // Not allowed
+  customParams: CustomParamsTypeQuery; // Required
+}
+
+// Combine both interfaces into a single union type
+export type ListAggregationType = WithoutOwnPipeline | WithOwnPipeline;
+
 export interface ColumnFilterType {
   id: string;
   value: string | number | string[]; // value can be string, number, or an array of strings
@@ -88,7 +103,7 @@ export interface AggregationPipelineFunctionType {
   sortField: string;
   sortOrder: number;
   ids?: ObjectId[] | string[];
-  customParams: CustomParamsTypeQuery;
+  customParams?: CustomParamsTypeQuery;
 }
 
 export interface AggregationResult {

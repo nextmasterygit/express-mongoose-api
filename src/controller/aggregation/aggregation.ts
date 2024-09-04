@@ -66,7 +66,7 @@ export const createAggregationPipeline = ({
     toDate,
     fieldDate,
     lookup = []
-  } = customParams;
+  } = customParams ?? {};
 
   const matchStage = matchStages({
     searchTerm,
